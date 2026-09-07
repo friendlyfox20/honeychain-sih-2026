@@ -1,0 +1,45 @@
+{
+    "experiment": "Daily Honey Production Prediction",
+    "best_ml_model": "Random Forest",
+    "metrics": {
+        "MAE": 0.0222,
+        "RMSE": 0.026,
+        "R2": -0.0318
+    },
+    "best_hyperparameters": {
+        "max_depth": 3,
+        "min_samples_split": 10,
+        "n_estimators": 100
+    },
+    "feature_columns": [
+        "prev_daily_production",
+        "lag1_honey_weight",
+        "lag2_daily_production",
+        "lag3_daily_production",
+        "roll_mean_3_prod",
+        "roll_mean_7_prod",
+        "roll_std_7_prod",
+        "Environmental Temperature (\u00b0C)",
+        "Relative Humidity (%)",
+        "Hive Temperature (\u00b0C)",
+        "Hive Humidity (%)",
+        "Wind Speed (km/h)",
+        "month",
+        "day_of_year"
+    ],
+    "target_column": "daily_honey_production",
+    "train_date_range": [
+        "2024-01-09",
+        "2024-10-20"
+    ],
+    "test_date_range": [
+        "2024-10-21",
+        "2024-12-30"
+    ],
+    "excluded_harvest_dates": [
+        "2024-04-30",
+        "2024-08-31",
+        "2024-12-31"
+    ],
+    "dataset_limitations": "Daily honey production was derived as first-differences of measured hive weight. Negative drops correspond to human harvesting operations, not negative biological production. Results represent a single hive in 2024 and cannot be assumed to reflect general Indian beekeeping conditions."
+}

@@ -1,0 +1,62 @@
+{
+    "dataset_type": "SIMULATED_DEMO_DATASET",
+    "validation_purpose": "Investigate whether 100% SVM performance is genuine or due to strict linear separability of synthetic demo rules.",
+    "rule_violation_check": {
+        "total_records": 500,
+        "normal_records": 460,
+        "normal_rule_violations": 0,
+        "anomaly_records": 40,
+        "anomaly_rule_violations": 40,
+        "verdict": "All simulated anomalies violate mass conservation; all normal records strictly adhere to mass conservation."
+    },
+    "deterministic_rule_performance": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+    },
+    "svm_cv_5fold_raw_features": {
+        "accuracy_mean": 1.0,
+        "precision_mean": 1.0,
+        "recall_mean": 1.0,
+        "f1_mean": 1.0
+    },
+    "multi_seed_robustness": [
+        {
+            "seed": 42,
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        {
+            "seed": 7,
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        {
+            "seed": 21,
+            "accuracy": 0.99,
+            "precision": 1.0,
+            "recall": 0.875,
+            "f1_score": 0.9333333333333333
+        },
+        {
+            "seed": 100,
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        },
+        {
+            "seed": 2026,
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0
+        }
+    ],
+    "overall_conclusion": "The 100% SVM classification performance occurs because the synthetic demo dataset was constructed using strict deterministic quantity-conservation boundaries (Harvest >= Processing >= Bottled >= Dispatched for normal batches). Linear SVM naturally discovers these exact decision hyperplanes. This model is a proof-of-concept for the simulated demo environment and MUST NOT be claimed as validated for real-world supply chains without field data."
+}

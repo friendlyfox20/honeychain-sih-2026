@@ -1,0 +1,56 @@
+{
+    "dataset_type": "SIMULATED_DEMO_DATASET",
+    "dataset_path": "anomaly_data\\supply_chain_demo.csv",
+    "total_records": 500,
+    "normal_records": 460,
+    "anomaly_records": 40,
+    "anomaly_ratio_pct": 8.0,
+    "feature_columns": [
+        "Harvest_Quantity_kg",
+        "Processing_Quantity_kg",
+        "Bottled_Quantity_kg",
+        "Dispatched_Quantity_kg"
+    ],
+    "target_column": "Anomaly",
+    "train_size": 400,
+    "test_size": 100,
+    "random_seed": 42,
+    "preprocessing_details": "StandardScaler applied for SVM/SVC; Tree models trained on raw quantity features.",
+    "best_model_name": "SVM / SVC",
+    "best_hyperparameters": {
+        "svc__C": 100.0,
+        "svc__gamma": "scale",
+        "svc__kernel": "linear"
+    },
+    "selection_rationale": "Prioritized Anomaly-Class F1-Score and Recall to minimize missed supply chain anomalies.",
+    "model_comparison_metrics": [
+        {
+            "Model": "SVM / SVC",
+            "Accuracy": 1.0,
+            "Precision": 1.0,
+            "Recall": 1.0,
+            "F1-Score": 1.0
+        },
+        {
+            "Model": "Random Forest",
+            "Accuracy": 0.96,
+            "Precision": 1.0,
+            "Recall": 0.5,
+            "F1-Score": 0.6667
+        },
+        {
+            "Model": "Gradient Boosting",
+            "Accuracy": 0.97,
+            "Precision": 1.0,
+            "Recall": 0.625,
+            "F1-Score": 0.7692
+        },
+        {
+            "Model": "XGBoost",
+            "Accuracy": 0.95,
+            "Precision": 0.8,
+            "Recall": 0.5,
+            "F1-Score": 0.6154
+        }
+    ]
+}

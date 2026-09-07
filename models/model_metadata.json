@@ -1,0 +1,56 @@
+{
+    "best_model_name": "XGBoost (with Lags)",
+    "metrics": {
+        "MAE": 0.352,
+        "RMSE": 1.5525,
+        "R2": 0.5867
+    },
+    "best_hyperparameters": {
+        "learning_rate": 0.1,
+        "max_depth": 5,
+        "n_estimators": 150,
+        "subsample": 1.0
+    },
+    "feature_columns": [
+        "Environmental Temperature (\u00b0C)",
+        "Relative Humidity (%)",
+        "Hive Temperature (\u00b0C)",
+        "Hive Humidity (%)",
+        "Wind Speed (km/h)",
+        "month",
+        "day_of_year",
+        "honey_weight_lag1",
+        "honey_weight_roll_mean_3",
+        "honey_weight_roll_mean_7",
+        "honey_weight_roll_std_7"
+    ],
+    "base_features": [
+        "Environmental Temperature (\u00b0C)",
+        "Relative Humidity (%)",
+        "Hive Temperature (\u00b0C)",
+        "Hive Humidity (%)",
+        "Wind Speed (km/h)",
+        "month",
+        "day_of_year"
+    ],
+    "lag_features": [
+        "honey_weight_lag1",
+        "honey_weight_roll_mean_3",
+        "honey_weight_roll_mean_7",
+        "honey_weight_roll_std_7"
+    ],
+    "target_column": "Honey Weight (kg)",
+    "train_date_range": [
+        "2024-01-08",
+        "2024-10-20"
+    ],
+    "test_date_range": [
+        "2024-10-21",
+        "2024-12-31"
+    ],
+    "dataset_limitations": "This model was trained on 365 daily observations from a single hive throughout 2024. Due to limited sample size and single-location scope, performance may not generalize to other years, geographical locations, or broader Indian beekeeping conditions without further empirical validation across multi-site IoT installations.",
+    "excluded_features": [
+        "Total Weight (Hive + Bees + Honey) (kg)",
+        "Extract Honey"
+    ]
+}
