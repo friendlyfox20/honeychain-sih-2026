@@ -11,21 +11,29 @@ import os
 
 db_url = settings.DATABASE_URL
 
-if not db_url or not db_url.strip():
+def get_fallback_sqlite_url() -> str:
     backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     db_path = os.path.join(backend_dir, "honeychain_dev.db")
     # Cross-platform URI formatting (Windows requires forward slashes in SQLite URIs)
     clean_db_path = db_path.replace("\\", "/")
-    db_url = f"sqlite:///{clean_db_path}"
+    return f"sqlite:///{clean_db_path}"
+
+if not db_url or not db_url.strip():
+    db_url = get_fallback_sqlite_url()
     logger.info(f"DATABASE_URL not set. Using absolute SQLite development database: {db_url}")
 
 connect_args = {"check_same_thread": False} if db_url.startswith("sqlite") else {}
 
 try:
     engine = create_engine(db_url, connect_args=connect_args, pool_pre_ping=True)
+    # Test connection immediately for remote databases to catch unreachable servers early
+    if not db_url.startswith("sqlite"):
+        with engine.connect() as conn:
+            pass
 except Exception as e:
-    logger.error(f"Failed to initialize engine for {db_url}: {e}. Falling back to SQLite in-memory.")
-    db_url = "sqlite:///:memory:"
+    fallback_url = get_fallback_sqlite_url()
+    logger.warning(f"Configured database ({db_url}) is unreachable: {e}. Falling back to local SQLite: {fallback_url}")
+    db_url = fallback_url
     engine = create_engine(db_url, connect_args={"check_same_thread": False})
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
