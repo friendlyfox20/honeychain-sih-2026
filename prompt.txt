@@ -1,0 +1,1786 @@
+You are responsible for building and integrating the frontend for the HoneyChain SIH 2026 project.
+
+IMPORTANT:
+
+The backend has already been implemented.
+
+Your job is NOT to rebuild the backend.
+
+Your job is to understand the existing backend, build the frontend around the existing API contracts, and integrate/test the complete system.
+
+GitHub repository:
+
+https://github.com/harshinihasalkar0-web/honeychain-sih-2026
+
+Backend Swagger/OpenAPI:
+
+http://127.0.0.1:8000/docs
+
+OpenAPI JSON:
+
+http://127.0.0.1:8000/openapi.json
+
+The backend currently has:
+
+136 tests passed
+0 failed
+0 errors
+0 skipped
+
+The backend has gone through Phase 1 → Phase 9.
+
+============================================================
+1. HONEYCHAIN PRODUCT PURPOSE
+============================================================
+
+HoneyChain is a:
+
+- honey supply-chain traceability platform
+- evidence and reconciliation system
+- batch genealogy system
+- honey intelligence/ML system
+- anomaly detection system
+- QR-based consumer verification system
+- blockchain integrity layer
+- voice query system
+- admin analytics and monitoring system
+
+The core physical flow is:
+
+Hive
+  ↓
+Harvest
+  ↓
+Collection
+  ↓
+Processing
+  ↓
+Laboratory
+  ↓
+Packaging
+  ↓
+Distribution/Retail
+  ↓
+Consumer
+
+The frontend should make this journey understandable.
+
+The central idea is:
+
+TRACEABILITY + EVIDENCE + INTELLIGENCE + INTEGRITY
+
+not simply:
+
+"Blockchain + QR + AI"
+
+============================================================
+2. VERY IMPORTANT PRODUCT PRINCIPLES
+============================================================
+
+The frontend must respect these principles:
+
+1. Do not blindly trust self-reported data.
+
+2. Do not claim that blockchain creates truth.
+
+3. Do not claim HoneyChain replaces laboratory/regulatory testing.
+
+4. Do not make the interface unnecessarily complicated for rural/non-technical users.
+
+5. IoT/sensor ingestion is NOT part of the current implementation.
+
+6. Do not use AI where deterministic rules are more appropriate.
+
+7. For consumers, show evidence and traceability rather than overwhelming them with technical blockchain details.
+
+8. Do not store or display unnecessary information from blockchain.
+
+9. Do not imply that the system guarantees physical authenticity of honey.
+
+10. Every frontend feature should correspond to an actual backend capability.
+
+============================================================
+3. CURRENT BACKEND ARCHITECTURE
+============================================================
+
+Backend:
+
+FastAPI / Python
+
+Database:
+
+SQLAlchemy
+
+Database supports:
+
+SQLite fallback for development
+PostgreSQL readiness for deployment
+
+Authentication:
+
+JWT bearer authentication
+
+Authorization:
+
+RBAC
+
+ML:
+
+Python ML models loaded by backend services
+
+Blockchain:
+
+Provider abstraction with mock/default development support and configurable Web3 provider
+
+QR:
+
+Secure token-based verification
+
+Voice:
+
+Pluggable speech-to-text architecture
+
+Admin:
+
+SQL-based analytics and monitoring
+
+Testing:
+
+Pytest
+
+============================================================
+4. BACKEND PHASES COMPLETED
+============================================================
+
+PHASE 1
+Basic FastAPI backend + ML inference.
+
+PHASE 2
+Database + batch + traceability + lab + evidence + reconciliation.
+
+PHASE 3
+Authentication + JWT + RBAC.
+
+PHASE 4
+Batch genealogy + advanced traceability + reconciliation/anomaly integration.
+
+PHASE 5
+Secure QR generation + public consumer verification.
+
+PHASE 6
+Voice backend + speech-to-text + voice query intents.
+
+PHASE 7
+Blockchain integrity layer.
+
+PHASE 8
+Admin analytics + audit logs + monitoring.
+
+PHASE 9
+Security hardening + integration testing + production readiness.
+
+Do not assume there are unfinished backend phases that need to be implemented.
+
+============================================================
+5. HEALTH
+============================================================
+
+Health endpoints:
+
+GET /health
+
+GET /api/v1/health
+
+Expected basic health response includes:
+
+{
+  "status": "ok",
+  "service": "HoneyChain Backend"
+}
+
+Use these for frontend/backend connectivity testing.
+
+============================================================
+6. AUTHENTICATION
+============================================================
+
+Authentication endpoints:
+
+POST /api/v1/auth/register
+
+POST /api/v1/auth/login
+
+POST /api/v1/auth/login/json
+
+GET /api/v1/auth/me
+
+Registration creates users.
+
+Login returns JWT authentication information.
+
+The frontend must:
+
+1. Login user.
+2. Store authentication state appropriately.
+3. Attach bearer token to protected API requests.
+4. Fetch current user.
+5. Determine role.
+6. Redirect to appropriate dashboard.
+7. Handle expired/invalid authentication.
+
+Do NOT:
+
+- display JWT to users
+- log JWT
+- expose JWT secrets
+- expose password hashes
+- put backend secrets in frontend code
+
+============================================================
+7. USER ROLES
+============================================================
+
+Backend roles:
+
+BEEKEEPER
+COLLECTOR
+PROCESSOR
+LAB
+ADMIN
+
+These roles determine what actions users can perform.
+
+IMPORTANT:
+
+Frontend role checks are only for UX.
+
+Backend RBAC is the actual security boundary.
+
+If frontend hides a button, that does NOT make the operation secure.
+
+The frontend should still handle backend 401 and 403 responses.
+
+============================================================
+8. ROLE CAPABILITIES
+============================================================
+
+BEEKEEPER:
+
+Can work with:
+
+- batches
+- harvest-related activity
+- traceability
+- reconciliation
+- predictions
+
+COLLECTOR:
+
+Can:
+
+- view batches
+- work with collection events
+
+PROCESSOR:
+
+Can:
+
+- processing-related operations
+- packaging-related operations
+- reconciliation
+
+LAB:
+
+Can:
+
+- view batches
+- create/view lab records
+- work with evidence
+
+ADMIN:
+
+Can access:
+
+- analytics
+- users
+- audit logs
+- monitoring
+- broad system functionality
+
+Do not assume every role can perform every mutation.
+
+Use backend 403 responses as the final authority.
+
+============================================================
+9. BATCH MANAGEMENT
+============================================================
+
+Batch endpoints include:
+
+POST /api/v1/batches
+
+GET /api/v1/batches
+
+GET /api/v1/batches/{batch_id}
+
+A batch contains information such as:
+
+- batch ID
+- source type
+- source reference
+- quantity
+- status
+- timestamps
+
+Example batch creation concept:
+
+{
+  "batch_id": "BATCH-2026-0001",
+  "source_type": "HIVE",
+  "source_reference": "HIVE-001",
+  "quantity_kg": 50
+}
+
+The frontend should provide:
+
+- batch list
+- batch search/filter
+- batch creation where authorized
+- batch detail page
+- batch status
+- quantity
+- source information
+- timestamps
+
+============================================================
+10. SUPPLY-CHAIN EVENTS
+============================================================
+
+A batch can have supply-chain events.
+
+Endpoint:
+
+POST /api/v1/batches/{batch_id}/events
+
+Trace endpoint:
+
+GET /api/v1/batches/{batch_id}/trace
+
+Events represent stages such as:
+
+HARVEST
+COLLECTION
+PROCESSING
+PACKAGING
+etc.
+
+Do not invent event types without checking the actual backend schema.
+
+The frontend should present the trace as a chronological timeline.
+
+Example:
+
+Hive
+ ↓
+Harvest
+ ↓
+Collection
+ ↓
+Processing
+ ↓
+Lab
+ ↓
+Packaging
+ ↓
+Distribution
+
+For each event display available safe information such as:
+
+- event type
+- location
+- quantity
+- timestamp
+- notes
+
+============================================================
+11. TRACEABILITY
+============================================================
+
+Traceability is one of the most important frontend features.
+
+A user should be able to open:
+
+Batch → Trace
+
+and immediately understand:
+
+Where did this honey come from?
+
+What happened to it?
+
+What quantities moved through the chain?
+
+Was anything suspicious?
+
+Was it tested?
+
+Was evidence attached?
+
+Is the integrity record anchored?
+
+The trace response integrates information from multiple backend systems.
+
+Potentially show:
+
+- supply-chain events
+- lab records
+- evidence
+- reconciliation
+- genealogy
+- anomaly information
+- QR/verification information
+- blockchain status
+
+============================================================
+12. RECONCILIATION
+============================================================
+
+Endpoint:
+
+POST /api/v1/batches/{batch_id}/reconcile
+
+Reconciliation checks quantity flow.
+
+Core principle:
+
+Output quantity should not exceed input quantity.
+
+For example:
+
+Harvest:
+50 kg
+
+Processing:
+48 kg
+
+Bottling:
+46 kg
+
+Dispatch:
+45 kg
+
+This is reasonable.
+
+But:
+
+Harvest:
+50 kg
+
+Processing:
+62 kg
+
+is a quantity violation.
+
+The backend uses deterministic rules as an authoritative layer.
+
+The frontend should clearly show:
+
+NORMAL
+
+or
+
+ANOMALY / VIOLATION
+
+Do not override the backend result.
+
+Do not create fake discrepancy calculations if the backend already provides them.
+
+============================================================
+13. ANOMALY DETECTION
+============================================================
+
+Endpoint:
+
+POST /api/v1/anomaly/check
+
+The anomaly system has two layers:
+
+Layer 1:
+Deterministic quantity-conservation rules.
+
+Layer 2:
+ML anomaly detection.
+
+The deterministic rules remain authoritative.
+
+The frontend should display:
+
+NORMAL
+
+or
+
+ANOMALY DETECTED
+
+If backend provides details, show:
+
+- violated stage
+- quantity difference
+- anomaly explanation
+- ML result/score if available
+
+Do not invent probabilities.
+
+Do not claim:
+
+"AI proved fraud."
+
+Instead use wording such as:
+
+"Supply-chain anomaly detected"
+
+or
+
+"Quantity reconciliation violation detected."
+
+============================================================
+14. BATCH GENEALOGY
+============================================================
+
+Genealogy supports relationships between batches.
+
+Relationship types include:
+
+SPLIT
+MERGE
+DERIVED
+TRANSFER
+
+Endpoints:
+
+POST /api/v1/batches/relationships
+
+GET /api/v1/batches/{batch_id}/genealogy
+
+GET /api/v1/batches/{batch_id}/ancestors
+
+GET /api/v1/batches/{batch_id}/descendants
+
+Example:
+
+Parent Batch
+     ↓
+   Split
+   ↙   ↘
+Batch A Batch B
+
+Or:
+
+Batch A
+   ↘
+    MERGE → Batch C
+   ↗
+Batch B
+
+The frontend should provide a visual genealogy/tree representation.
+
+For simple cases a tree is enough.
+
+Do not build an unnecessarily complex graph if a clear tree works better.
+
+============================================================
+15. LAB RECORDS
+============================================================
+
+Lab endpoints:
+
+POST /api/v1/batches/{batch_id}/lab
+
+GET /api/v1/batches/{batch_id}/lab
+
+The frontend should allow authorized lab users to:
+
+- add lab records
+- view lab records
+- associate records with batches
+
+Display relevant safe information from the backend schema.
+
+IMPORTANT:
+
+HoneyChain complements laboratory testing.
+
+Do NOT display language implying:
+
+"FSSAI certified"
+
+"Government approved"
+
+"100% pure"
+
+unless such information is explicitly returned by the backend.
+
+============================================================
+16. EVIDENCE
+============================================================
+
+Evidence endpoints:
+
+POST /api/v1/batches/{batch_id}/evidence
+
+GET /api/v1/batches/{batch_id}/evidence
+
+Evidence can be associated with a batch.
+
+Frontend should display:
+
+- evidence type
+- description
+- timestamps
+- associated batch
+- safe metadata
+
+If the backend returns a usable file/image representation, display it appropriately.
+
+Do not expose internal security information.
+
+============================================================
+17. ML — HONEY YIELD
+============================================================
+
+Endpoint:
+
+POST /api/v1/predictions/yield
+
+This predicts honey yield.
+
+The backend has a trained model and inference service.
+
+IMPORTANT ML DATA NOTE:
+
+The original real dataset contains:
+
+- environmental temperature
+- relative humidity
+- hive temperature
+- hive humidity
+- wind speed
+- honey weight
+- total weight
+- extract honey
+
+During modeling, obvious target leakage was identified.
+
+Therefore the prediction system should NOT be treated as if:
+
+"Total Weight = prediction feature"
+
+or
+
+"Extract Honey = future prediction input."
+
+The frontend should simply collect the inputs that the actual backend prediction schema requires.
+
+Do NOT invent additional ML inputs.
+
+Use wording:
+
+"Estimated honey yield"
+
+rather than:
+
+"Guaranteed yield."
+
+============================================================
+18. ML — DAILY PRODUCTION
+============================================================
+
+Endpoint:
+
+POST /api/v1/predictions/daily-production
+
+This predicts estimated daily honey production.
+
+Important conceptual distinction:
+
+Honey Weight
+
+is not the same thing as:
+
+Daily Honey Production.
+
+The frontend should label units correctly.
+
+Use:
+
+kg/day
+
+for daily production where appropriate.
+
+============================================================
+19. QR CODE SYSTEM
+============================================================
+
+QR generation is implemented.
+
+The backend generates a secure verification token.
+
+Authenticated endpoint(s) are available for batch QR management.
+
+The public endpoint is:
+
+GET /api/v1/verify/{verification_token}
+
+The QR is intended to identify a packaged/batch record and lead to the HoneyChain verification page.
+
+The QR should NOT contain the entire database record.
+
+The frontend should have:
+
+Authenticated QR view:
+
+- QR image
+- batch ID
+- verification URL
+- active status
+- blockchain status if available
+
+Public verification:
+
+/verify/:token
+
+The public page does NOT require login.
+
+============================================================
+20. PUBLIC CONSUMER PAGE
+============================================================
+
+The consumer verification page is extremely important for the demo.
+
+Example UI:
+
+---------------------------------------
+🍯 HoneyChain Verification
+
+Batch:
+BATCH-2026-0001
+
+Source:
+HIVE-001
+
+Quantity:
+50 kg
+
+Traceability:
+✓ Harvest recorded
+✓ Processing recorded
+✓ Lab record available
+✓ Reconciliation checked
+
+Integrity:
+✓ Blockchain integrity verified
+
+Verified HoneyChain traceability record
+---------------------------------------
+
+IMPORTANT:
+
+Do NOT claim:
+
+"100% authentic honey"
+
+"Blockchain proves this honey is genuine"
+
+"Government certified"
+
+unless the backend explicitly provides such information.
+
+The system verifies the recorded traceability/integrity information.
+
+============================================================
+21. BLOCKCHAIN
+============================================================
+
+Blockchain is an integrity layer.
+
+It is NOT the primary database.
+
+The primary source of truth remains the application database.
+
+Backend supports:
+
+- canonical hashing
+- blockchain anchoring
+- integrity verification
+- anchor history
+- transaction lookup
+- mock provider
+- configurable Web3 provider
+
+Blockchain status can include:
+
+ANCHORED
+VERIFIED
+NOT_ANCHORED
+TAMPERED
+FAILED
+
+Frontend should display these statuses clearly.
+
+For example:
+
+✓ Integrity Verified
+
+or:
+
+⚠ Integrity Mismatch Detected
+
+Safe information that can be shown:
+
+- blockchain status
+- network
+- transaction hash
+- anchored time
+
+Never display:
+
+- private key
+- RPC URL
+- wallet secret
+- JWT secret
+- database credentials
+
+============================================================
+22. VOICE SYSTEM
+============================================================
+
+Voice backend is implemented.
+
+The architecture supports:
+
+Speech-to-Text
+↓
+Intent extraction
+↓
+Structured query
+↓
+Existing HoneyChain service
+↓
+Response
+
+Supported intent areas include:
+
+BATCH_STATUS
+TRACE
+GENEALOGY
+ANCESTORS
+DESCENDANTS
+LAB
+EVIDENCE
+RECONCILIATION
+ANOMALY
+YIELD_PREDICTION
+DAILY_PRODUCTION_PREDICTION
+
+There are voice endpoints under:
+
+/api/v1/voice/...
+
+including:
+
+/voice/transcribe
+/voice/query
+/voice/ask
+
+Check Swagger for the exact request/response schemas before integration.
+
+The frontend can provide:
+
+- microphone button
+- recording state
+- transcription
+- query processing
+- answer
+- error handling
+
+Text fallback should also be supported.
+
+IMPORTANT:
+
+Do not fake voice responses.
+
+If microphone permissions fail:
+
+show a clear error/fallback.
+
+============================================================
+23. ADMIN ANALYTICS
+============================================================
+
+ADMIN ONLY.
+
+Endpoints:
+
+GET /api/v1/admin/analytics/overview
+
+GET /api/v1/admin/analytics/batches
+
+GET /api/v1/admin/analytics/supply-chain
+
+GET /api/v1/admin/analytics/anomalies
+
+GET /api/v1/admin/analytics/predictions
+
+GET /api/v1/admin/analytics/blockchain
+
+GET /api/v1/admin/analytics/users
+
+GET /api/v1/admin/audit-logs
+
+GET /api/v1/admin/monitoring
+
+These are real backend endpoints.
+
+Admin analytics covers things such as:
+
+- batch totals
+- batch status distribution
+- trends
+- supply-chain event counts
+- quantity flow
+- reconciliation totals
+- anomaly information
+- prediction/model information
+- blockchain anchors
+- users
+- audit logs
+- subsystem health
+
+Use charts where they genuinely improve understanding.
+
+Do not create fake data to make charts look impressive.
+
+If no data exists:
+
+"No data available"
+
+is better than fake numbers.
+
+============================================================
+24. ADMIN USERS
+============================================================
+
+Admin users endpoint provides user information.
+
+Display safe fields such as:
+
+- name
+- email
+- role
+- active status
+- created date
+
+Never display:
+
+password_hash
+JWT
+JWT secret
+blockchain private key
+RPC URL
+database credentials
+
+============================================================
+25. ADMIN AUDIT LOGS
+============================================================
+
+Endpoint:
+
+GET /api/v1/admin/audit-logs
+
+Supports paginated audit-log searching/filtering.
+
+Create:
+
+- table
+- pagination
+- date filters if appropriate
+- action/entity filtering if supported
+
+The purpose is to show:
+
+Who performed an action?
+What action occurred?
+When did it occur?
+What resource was affected?
+
+Do not expose secrets.
+
+============================================================
+26. ADMIN MONITORING
+============================================================
+
+Endpoint:
+
+GET /api/v1/admin/monitoring
+
+The backend monitoring covers subsystem health including areas such as:
+
+Database
+ML models
+Blockchain
+QR engine
+Speech-to-Text
+
+Display actual backend status.
+
+Do not hardcode:
+
+"Everything is healthy"
+
+============================================================
+27. SECURITY EXPECTATIONS
+============================================================
+
+The backend has already been security tested.
+
+Tests cover:
+
+- invalid JWT → 401
+- missing JWT → 401
+- unauthorized role → 403
+- secret exposure prevention
+- negative quantity rejection
+- invalid date rejection
+- genealogy self-parenting prevention
+- oversized audio rejection
+- unsupported audio extension rejection
+- invalid QR token
+- public QR secret protection
+- internal exception stacktrace protection
+
+The frontend must handle these correctly.
+
+Examples:
+
+401:
+
+"Your session has expired. Please log in again."
+
+403:
+
+"You don't have permission to perform this action."
+
+404:
+
+"Resource not found."
+
+422:
+
+"Please check the entered information."
+
+500:
+
+"Something went wrong. Please try again."
+
+Never display raw backend stack traces.
+
+============================================================
+28. CURRENT TEST STATUS
+============================================================
+
+The backend currently has:
+
+136 tests collected
+
+136 passed
+
+0 failed
+
+0 errors
+
+0 skipped
+
+There is also an end-to-end lifecycle integration test covering the major HoneyChain flow.
+
+The frontend must not break the existing backend.
+
+After frontend integration, backend tests should still pass.
+
+============================================================
+29. FRONTEND ARCHITECTURE
+============================================================
+
+Use a clean frontend architecture.
+
+Recommended:
+
+React
+TypeScript
+Vite
+React Router
+Tailwind CSS
+Axios/fetch
+Recharts
+Lucide icons
+
+Suggested structure:
+
+src/
+  api/
+    client.ts
+    auth.ts
+    batches.ts
+    predictions.ts
+    anomaly.ts
+    reconciliation.ts
+    lab.ts
+    evidence.ts
+    genealogy.ts
+    qr.ts
+    voice.ts
+    blockchain.ts
+    analytics.ts
+
+  components/
+    ui/
+    batch/
+    traceability/
+    analytics/
+    qr/
+    predictions/
+    voice/
+
+  pages/
+    Login
+    Register
+    Dashboard
+    Batches
+    BatchDetails
+    Traceability
+    Predictions
+    Reconciliation
+    Lab
+    Evidence
+    Genealogy
+    QR
+    Voice
+    ConsumerVerification
+
+    admin/
+      Analytics
+      Users
+      AuditLogs
+      Monitoring
+
+  auth/
+    AuthContext
+    ProtectedRoute
+    RoleGuard
+
+  layouts/
+    DashboardLayout
+
+  hooks/
+
+  types/
+
+============================================================
+30. API CLIENT
+============================================================
+
+Create a centralized API client.
+
+Example environment variable:
+
+VITE_API_BASE_URL=http://127.0.0.1:8000
+
+Do NOT hardcode production secrets.
+
+The client should automatically attach:
+
+Authorization: Bearer <token>
+
+for protected requests.
+
+Handle common errors centrally.
+
+============================================================
+31. FRONTEND ROUTES
+============================================================
+
+Suggested routes:
+
+/login
+/register
+/dashboard
+
+/batches
+/batches/:batchId
+/batches/:batchId/trace
+/batches/:batchId/genealogy
+/batches/:batchId/reconciliation
+/batches/:batchId/lab
+/batches/:batchId/evidence
+/batches/:batchId/qr
+
+/predictions
+/anomalies
+/voice
+
+/verify/:token
+
+/admin
+/admin/analytics
+/admin/users
+/admin/audit-logs
+/admin/monitoring
+
+Adjust based on actual frontend architecture.
+
+============================================================
+32. DASHBOARD
+============================================================
+
+Dashboard should be role-aware.
+
+Common cards:
+
+Total Batches
+Active Batches
+Completed Batches
+Anomalies
+Reconciliation
+Recent Events
+
+BEEKEEPER:
+
+- batches
+- harvest-related activity
+- predictions
+
+COLLECTOR:
+
+- collection-related activity
+- batches
+
+PROCESSOR:
+
+- processing
+- reconciliation
+- packaging
+
+LAB:
+
+- lab records
+- evidence
+
+ADMIN:
+
+- full analytics overview
+
+============================================================
+33. BATCH DETAIL PAGE
+============================================================
+
+Make this the central HoneyChain page.
+
+Possible layout:
+
+--------------------------------------
+Batch BATCH-2026-0001
+--------------------------------------
+
+Status: CREATED
+
+Quantity: 50 kg
+
+Source:
+HIVE-001
+
+--------------------------------------
+Traceability
+--------------------------------------
+
+Harvest
+  ↓
+Collection
+  ↓
+Processing
+  ↓
+Lab
+  ↓
+Packaging
+
+--------------------------------------
+Quantity Reconciliation
+--------------------------------------
+
+Input → Output
+
+--------------------------------------
+Anomaly
+--------------------------------------
+
+NORMAL
+
+--------------------------------------
+Genealogy
+--------------------------------------
+
+Parent / Child batches
+
+--------------------------------------
+Evidence
+--------------------------------------
+
+Lab / uploaded evidence
+
+--------------------------------------
+Blockchain
+--------------------------------------
+
+✓ Integrity verified
+
+--------------------------------------
+QR
+--------------------------------------
+
+[QR CODE]
+
+--------------------------------------
+
+The goal is to make one batch tell the complete story.
+
+============================================================
+34. CONSUMER EXPERIENCE
+============================================================
+
+The consumer should NOT need to understand:
+
+- JWT
+- SQLAlchemy
+- blockchain providers
+- model architecture
+- backend services
+
+They should see:
+
+Where honey came from
+What happened to it
+Whether records are complete
+Whether lab evidence exists
+Whether quantity reconciliation passed
+Whether integrity verification passed
+
+"Technology should disappear; evidence should remain."
+
+============================================================
+35. NO IOT
+============================================================
+
+IMPORTANT:
+
+Do NOT build a live sensor dashboard.
+
+Do NOT create:
+
+real-time temperature
+real-time humidity
+live hive weight
+IoT device management
+
+These are NOT currently connected to the backend.
+
+The ML work used a real historical honey-production dataset for experimentation, but that does NOT mean the frontend has a live IoT stream.
+
+============================================================
+36. ML UI SHOULD BE HONEST
+============================================================
+
+Do not display ML as magical.
+
+Use:
+
+"Estimated Honey Yield"
+
+"Estimated Daily Production"
+
+"Anomaly Detection"
+
+not:
+
+"AI guarantees your harvest."
+
+The backend model is an inference component, not a guarantee.
+
+============================================================
+37. LOADING / ERROR / EMPTY STATES
+============================================================
+
+Every API page must support:
+
+Loading
+
+Success
+
+Empty
+
+Error
+
+Examples:
+
+Loading:
+"Loading batch..."
+
+Empty:
+"No batches found."
+
+Error:
+"Unable to load batches."
+
+Do not leave blank screens.
+
+============================================================
+38. RESPONSIVE DESIGN
+============================================================
+
+Desktop:
+Primary target for SIH demo.
+
+Also support:
+
+Tablet
+Mobile
+
+The consumer QR verification page should especially work well on mobile because users may reach it by scanning a QR code.
+
+============================================================
+39. DEMO FLOW
+============================================================
+
+The final SIH demo should revolve around ONE batch.
+
+Recommended frontend demonstration:
+
+1. Login as beekeeper.
+
+2. Open dashboard.
+
+3. Create/view a batch.
+
+4. Open batch details.
+
+5. Show harvest event.
+
+6. Show supply-chain trace.
+
+7. Show quantity reconciliation.
+
+8. Show anomaly detection.
+
+9. Show lab record.
+
+10. Show evidence.
+
+11. Show genealogy.
+
+12. Generate QR.
+
+13. Open the public verification page.
+
+14. Show traceability to the consumer.
+
+15. Show blockchain integrity status.
+
+16. Show ML yield prediction.
+
+17. Show daily production prediction.
+
+18. Demonstrate voice query.
+
+19. Login as ADMIN.
+
+20. Show analytics.
+
+21. Show anomaly statistics.
+
+22. Show blockchain statistics.
+
+23. Show users.
+
+24. Show audit logs.
+
+25. Show system monitoring.
+
+The entire story should feel like:
+
+Hive
+ ↓
+Honey
+ ↓
+Batch
+ ↓
+Collection
+ ↓
+Processing
+ ↓
+Lab
+ ↓
+Packaging
+ ↓
+QR
+ ↓
+Consumer
+ ↓
+Verified traceability
+
+============================================================
+40. WHAT NOT TO DO
+============================================================
+
+DO NOT:
+
+- rebuild backend
+- invent endpoints
+- invent response fields
+- invent ML values
+- invent IoT data
+- create fake analytics data
+- expose secrets
+- expose JWTs
+- expose password hashes
+- expose blockchain private keys
+- claim blockchain guarantees authenticity
+- claim HoneyChain replaces lab/regulatory testing
+- make frontend-only RBAC the security mechanism
+- break existing backend APIs
+- remove backend tests
+- add unnecessary infrastructure
+
+============================================================
+41. DEVELOPMENT ORDER
+============================================================
+
+Build in phases.
+
+PHASE A:
+
+- project setup
+- API client
+- authentication
+- login
+- register
+- dashboard layout
+- sidebar
+- role handling
+
+PHASE B:
+
+- batch list
+- batch creation
+- batch details
+- supply-chain events
+- traceability timeline
+
+PHASE C:
+
+- reconciliation
+- anomaly
+- lab
+- evidence
+- genealogy
+
+PHASE D:
+
+- QR generation
+- consumer verification
+- blockchain status
+
+PHASE E:
+
+- yield prediction
+- daily production
+- voice assistant
+
+PHASE F:
+
+- admin analytics
+- users
+- audit logs
+- monitoring
+
+PHASE G:
+
+- responsive design
+- error handling
+- loading states
+- accessibility
+- final integration testing
+- SIH demo polish
+
+Do not proceed with known broken functionality.
+
+============================================================
+42. BACKEND RUNNING LOCALLY
+============================================================
+
+From the project root:
+
+cd backend
+
+uvicorn app.main:app --reload
+
+Backend:
+
+http://127.0.0.1:8000
+
+Swagger:
+
+http://127.0.0.1:8000/docs
+
+Health:
+
+http://127.0.0.1:8000/health
+
+The frontend can use:
+
+VITE_API_BASE_URL=http://127.0.0.1:8000
+
+IMPORTANT:
+
+127.0.0.1 works only on the local machine running the backend.
+
+For deployment/demo on different machines, the backend will eventually need a publicly accessible URL.
+
+============================================================
+43. API DOCUMENTATION
+============================================================
+
+Before implementing each frontend feature, inspect:
+
+http://127.0.0.1:8000/docs
+
+Use Swagger to confirm:
+
+- request body
+- response body
+- required fields
+- authentication requirement
+- available status codes
+- role restrictions
+
+Do not rely on assumptions.
+
+============================================================
+44. FINAL INTEGRATION TEST
+============================================================
+
+Before calling the frontend complete:
+
+Test:
+
+Authentication
+Batch creation
+Batch listing
+Batch details
+Supply-chain events
+Traceability
+Reconciliation
+Anomaly detection
+Genealogy
+Lab
+Evidence
+QR
+Public QR verification
+Blockchain
+Yield prediction
+Daily production prediction
+Voice
+Admin analytics
+Users
+Audit logs
+Monitoring
+Logout
+
+Also test:
+
+401
+403
+404
+422
+500
+
+Then verify:
+
+Backend test suite still passes:
+
+136 passed
+
+============================================================
+45. FINAL DELIVERABLE
+============================================================
+
+At completion provide a report containing:
+
+1. Frontend technology stack
+
+2. Folder structure
+
+3. Pages implemented
+
+4. API endpoints integrated
+
+5. Authentication implementation
+
+6. RBAC implementation
+
+7. Batch/traceability implementation
+
+8. Reconciliation implementation
+
+9. Genealogy implementation
+
+10. Lab/evidence implementation
+
+11. ML integration
+
+12. QR integration
+
+13. Public consumer verification
+
+14. Blockchain integration
+
+15. Voice integration
+
+16. Admin analytics
+
+17. Testing performed
+
+18. Build result
+
+19. Any backend changes made
+
+20. Known limitations
+
+21. How to run frontend
+
+22. Complete SIH demo flow
+
+IMPORTANT:
+
+Do not claim features are complete unless they have actually been implemented and tested.
+
+FIRST ACTION:
+
+Do NOT start coding immediately.
+
+First inspect the HoneyChain repository and backend.
+
+Run the backend.
+
+Open Swagger.
+
+Understand the API contracts.
+
+Then propose the frontend architecture.
+
+After architecture is understood, implement Phase A first.

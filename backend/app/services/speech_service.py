@@ -21,6 +21,7 @@ class BaseSTTProvider(ABC):
         pass
 
 class SpeechRecognitionProvider(BaseSTTProvider):
+    provider_name = "speech_recognition"
     def transcribe(self, file_path: str) -> Dict[str, Union[str, float]]:
         import speech_recognition as sr
         recognizer = sr.Recognizer()
@@ -47,6 +48,7 @@ class SpeechRecognitionProvider(BaseSTTProvider):
             )
 
 class MockSpeechToTextProvider(BaseSTTProvider):
+    provider_name = "mock"
     def transcribe(self, file_path: str) -> Dict[str, Union[str, float]]:
         return {
             "transcript": "Show me the trace of batch BATCH-H001",
@@ -63,6 +65,8 @@ def get_stt_provider() -> BaseSTTProvider:
         return SpeechRecognitionProvider()
     else:
         return SpeechRecognitionProvider()
+
+get_active_stt_provider = get_stt_provider
 
 def validate_and_transcribe_audio(
     file_bytes: bytes,

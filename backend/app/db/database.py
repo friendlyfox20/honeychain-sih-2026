@@ -7,11 +7,15 @@ from app.models.base import Base
 
 logger = logging.getLogger(__name__)
 
+import os
+
 db_url = settings.DATABASE_URL
 
 if not db_url or not db_url.strip():
-    logger.warning("DATABASE_URL not set. Falling back to SQLite development database: sqlite:///./honeychain_dev.db")
-    db_url = "sqlite:///./honeychain_dev.db"
+    backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    db_path = os.path.join(backend_dir, "honeychain_dev.db")
+    db_url = f"sqlite:///{db_path}"
+    logger.info(f"DATABASE_URL not set. Using absolute SQLite development database: {db_url}")
 
 connect_args = {"check_same_thread": False} if db_url.startswith("sqlite") else {}
 
