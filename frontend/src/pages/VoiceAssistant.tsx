@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { api } from '../api/client';
 import { VoiceQueryResponse } from '../types';
-import { Card, CardHeader, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Alert } from '../components/ui/Alert';
@@ -9,13 +8,12 @@ import {
   Mic,
   MicOff,
   Send,
-  Sparkles,
-  Bot,
   Layers,
+  Sparkles,
   Search,
   Volume2,
-  Terminal,
-  Activity,
+  RefreshCw,
+  MessageSquare,
 } from 'lucide-react';
 
 export const VoiceAssistant: React.FC = () => {
@@ -76,7 +74,7 @@ export const VoiceAssistant: React.FC = () => {
       mediaRecorder.start();
       setIsRecording(true);
     } catch (err: any) {
-      setError('Microphone access denied or unavailable. You can use the text input below.');
+      setError('Microphone access unavailable or denied. You can use the text inquiry input below.');
       setIsRecording(false);
     }
   };
@@ -98,7 +96,7 @@ export const VoiceAssistant: React.FC = () => {
       setResult(res);
       setQueryText(res.transcript || '');
     } catch (err: any) {
-      setError(err.message || 'Audio transcription or query processing failed.');
+      setError(err.message || 'Speech recognition processing failed. Try speaking closer to microphone or use text.');
     } finally {
       setLoading(false);
     }
@@ -108,11 +106,12 @@ export const VoiceAssistant: React.FC = () => {
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Mic className="w-8 h-8 text-amber-500" /> Voice Query & Intent Assistant
+        <h1 className="text-2xl sm:text-3xl font-bold text-charcoal font-display tracking-tight flex items-center gap-2.5">
+          <MessageSquare className="w-7 h-7 text-forest-700" />
+          <span>Ask HoneyChain</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
-          Speech-to-Text conversion integrated with operational HoneyChain RBAC and query intent parser
+        <p className="text-xs sm:text-sm text-charcoal-muted mt-1">
+          Spoken voice inquiry & natural language query assistant for beekeepers and field operators
         </p>
       </div>
 
@@ -122,127 +121,127 @@ export const VoiceAssistant: React.FC = () => {
         </Alert>
       )}
 
-      {/* Voice Control Station */}
-      <Card className="text-center p-8 border border-amber-500/20 bg-gradient-to-b from-amber-500/5 via-slate-900 to-slate-900">
-        <CardContent className="p-0 space-y-6">
-          <div className="space-y-2">
-            <div className="relative inline-block">
-              {isRecording && (
-                <div className="absolute -inset-3 rounded-full bg-rose-500/30 animate-ping pointer-events-none" />
-              )}
-              <button
-                type="button"
-                onClick={isRecording ? stopRecording : startRecording}
-                disabled={loading}
-                className={`w-24 h-24 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-2xl ${
-                  isRecording
-                    ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-rose-600/50 scale-105'
-                    : 'bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 hover:scale-105 shadow-amber-500/30'
-                }`}
-              >
-                {isRecording ? <MicOff className="w-10 h-10" /> : <Mic className="w-10 h-10 stroke-[2.2]" />}
-              </button>
-            </div>
+      {/* Voice Recording Center */}
+      <div className="bg-white border border-border-warm rounded-2xl p-6 sm:p-8 text-center space-y-6 shadow-subtle">
+        <div className="space-y-2 max-w-md mx-auto">
+          <h2 className="text-base font-bold font-display text-charcoal">Voice Query Input</h2>
+          <p className="text-xs text-charcoal-muted leading-relaxed">
+            Click the microphone and speak your batch inquiry in English, Hindi, or Marathi.
+          </p>
+        </div>
 
-            <p className="text-sm font-bold text-white tracking-tight pt-2">
-              {isRecording ? 'Listening... Click to Finish & Process' : 'Click Microphone to Speak Query'}
-            </p>
-            <p className="text-xs text-slate-400">
-              {isRecording ? 'Capturing audio stream' : 'Or type your inquiry in natural language below'}
-            </p>
-          </div>
+        {/* Tactile Microphone Button (>= 56px touch target) */}
+        <div className="flex flex-col items-center justify-center gap-3">
+          <button
+            onClick={isRecording ? stopRecording : startRecording}
+            disabled={loading}
+            className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all cursor-pointer select-none shadow-subtle ${
+              isRecording
+                ? 'bg-terracotta-700 text-white animate-pulse border-2 border-terracotta-800'
+                : 'bg-forest-700 hover:bg-forest-800 active:bg-forest-900 text-white border-2 border-forest-800'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+            aria-label={isRecording ? 'Stop Recording' : 'Start Recording'}
+          >
+            {isRecording ? <MicOff className="w-8 h-8" /> : <Mic className="w-8 h-8" />}
+          </button>
 
-          {/* Text Input Fallback */}
+          <span className="font-mono text-xs font-semibold text-charcoal">
+            {isRecording
+              ? 'Recording audio... click again to process'
+              : loading
+              ? 'Analyzing speech & intent...'
+              : 'Tap to Speak'}
+          </span>
+        </div>
+
+        {/* Text Input Fallback */}
+        <div className="pt-6 border-t border-border-subtle max-w-xl mx-auto space-y-3">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleTextQuery();
             }}
-            className="flex items-center gap-2 max-w-xl mx-auto"
+            className="flex items-center gap-2"
           >
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="text"
-                value={queryText}
-                onChange={(e) => setQueryText(e.target.value)}
-                placeholder="Ask e.g. 'Show trace of BATCH-2026-0001'..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-amber-500"
-              />
-            </div>
-            <Button type="submit" isLoading={loading} icon={<Send className="w-4 h-4" />}>
+            <input
+              type="text"
+              placeholder="Or type your inquiry (e.g. Show trace of BATCH-2026-0001)..."
+              value={queryText}
+              onChange={(e) => setQueryText(e.target.value)}
+              className="flex-1 px-3.5 py-2.5 bg-surface-subtle border border-border-warm rounded-lg text-xs sm:text-sm text-charcoal placeholder:text-charcoal-muted/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20 focus:border-forest-600"
+            />
+            <Button
+              type="submit"
+              variant="primary"
+              size="md"
+              isLoading={loading}
+              icon={<Send className="w-4 h-4" />}
+            >
               Ask
             </Button>
           </form>
 
-          {/* Quick Example Query Pills */}
-          <div className="pt-2">
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-2">
-              Example Voice Intent Prompts:
-            </span>
-            <div className="flex flex-wrap justify-center gap-2">
-              {exampleQueries.map((ex, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => {
-                    setQueryText(ex);
-                    handleTextQuery(ex);
-                  }}
-                  className="text-xs px-3 py-1.5 rounded-xl bg-slate-950/70 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-slate-300 transition"
-                >
-                  "{ex}"
-                </button>
-              ))}
-            </div>
+          {/* Quick Example Query Chips */}
+          <div className="flex items-center gap-1.5 flex-wrap justify-center pt-2 text-xs">
+            <span className="text-[11px] font-mono text-charcoal-muted mr-1">Examples:</span>
+            {exampleQueries.map((q, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleTextQuery(q)}
+                className="px-2.5 py-1 rounded-md bg-surface-subtle hover:bg-surface-tint border border-border-subtle text-[11px] font-mono text-charcoal-muted hover:text-charcoal transition"
+              >
+                {q}
+              </button>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Structured Query Response Card */}
+      {/* Query Result Card */}
       {result && (
-        <Card className="border border-emerald-500/30 glow-emerald">
-          <CardHeader
-            title="Assistant Response"
-            subtitle="Parsed intent and structured data execution"
-            badge={
-              <Badge variant="emerald">
-                <Sparkles className="w-3 h-3" /> Intent: {result.intent}
+        <div className="bg-white border border-border-warm rounded-2xl p-6 shadow-subtle space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="text-xs font-bold font-display text-charcoal">Query Resolution</span>
+              <Badge variant="emerald" size="sm">
+                INTENT: {result.intent}
               </Badge>
-            }
-          />
-          <CardContent className="p-6 space-y-4">
-            <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <Bot className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
-              <div className="space-y-1">
-                <p className="text-xs font-semibold text-slate-400">
-                  Transcribed Input: <span className="text-slate-200 italic">"{result.transcript}"</span>
-                </p>
-                <p className="text-sm font-bold text-white leading-relaxed">{result.message}</p>
-              </div>
+              {result.batch_id && (
+                <Badge variant="amber" size="sm">
+                  BATCH: {result.batch_id}
+                </Badge>
+              )}
             </div>
-
-            {result.batch_id && (
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-slate-400">Target Batch Reference:</span>
-                <span className="font-mono font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
-                  {result.batch_id}
-                </span>
-              </div>
+            {result.provider && (
+              <span className="text-[11px] font-mono text-charcoal-muted">STT: {result.provider}</span>
             )}
+          </div>
 
-            {result.data && (
-              <div>
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
-                  Execution Payload Data:
-                </span>
-                <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-850 font-mono text-xs text-amber-300 overflow-x-auto max-h-64">
-                  {JSON.stringify(result.data, null, 2)}
-                </pre>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          {result.transcript && (
+            <div className="p-3 rounded-lg bg-surface-subtle border border-border-subtle text-xs space-y-0.5">
+              <span className="text-[10px] font-mono text-charcoal-muted uppercase">Recognized Transcript</span>
+              <p className="font-mono text-charcoal font-medium">"{result.transcript}"</p>
+            </div>
+          )}
+
+          <div className="p-4 rounded-xl bg-forest-50 border border-forest-200 text-xs space-y-1">
+            <span className="text-[10px] font-mono text-forest-700 uppercase font-bold">System Response</span>
+            <p className="text-sm font-semibold text-forest-900 leading-relaxed">{result.message}</p>
+          </div>
+
+          {/* Structured Context Data */}
+          {result.data && (
+            <div className="space-y-1.5 text-xs">
+              <span className="text-[11px] font-mono text-charcoal-muted uppercase font-semibold">
+                Operational Batch Details
+              </span>
+              <pre className="p-3 bg-surface-subtle border border-border-subtle rounded-lg font-mono text-[11px] text-charcoal overflow-x-auto">
+                {JSON.stringify(result.data, null, 2)}
+              </pre>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

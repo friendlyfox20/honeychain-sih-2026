@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Alert } from '../components/ui/Alert';
-import { Hexagon, Lock, Mail, User, ArrowRight } from 'lucide-react';
+import { Lock, Mail, User, ArrowRight } from 'lucide-react';
 
 export const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -34,126 +34,135 @@ export const Register: React.FC = () => {
   };
 
   const roles = [
-    { value: 'BEEKEEPER', label: 'Beekeeper / Apiary', desc: 'Harvest, create batches, yield estimates' },
-    { value: 'COLLECTOR', label: 'Collector / Aggregator', desc: 'Collect and log transit events' },
-    { value: 'PROCESSOR', label: 'Processor / Bottler', desc: 'Filtration, batch splits, packaging' },
-    { value: 'LAB', label: 'Laboratory Analyst', desc: 'Purity assays, chromatography reports' },
+    { value: 'BEEKEEPER', label: 'Beekeeper / Apiary', desc: 'Harvest logging, batch origination, yield estimates' },
+    { value: 'COLLECTOR', label: 'Collector / Aggregator', desc: 'Regional collection points & transit handoffs' },
+    { value: 'PROCESSOR', label: 'Processor / Bottler', desc: 'Filtration, batch splits, and packaging lots' },
+    { value: 'LAB', label: 'Laboratory Analyst', desc: 'Purity assays and chemical compliance reports' },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 sm:p-6 selection:bg-amber-500/30">
+    <div className="min-h-screen bg-canvas flex items-center justify-center p-4 sm:p-6 selection:bg-amber-200 selection:text-amber-900">
       <div className="w-full max-w-lg space-y-6">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl shadow-amber-500/20 text-slate-950 mb-2 relative">
-            <Hexagon className="w-8 h-8 fill-amber-950/20 stroke-[2]" />
-            <span className="absolute font-black text-lg text-slate-950">H</span>
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-forest-700 text-white font-bold font-mono text-base shadow-subtle mb-1">
+            HC
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Create an Account</h1>
-          <p className="text-sm text-slate-400">Join the HoneyChain Supply-Chain Integrity Network</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-charcoal font-display tracking-tight">
+            Register Operator Account
+          </h1>
+          <p className="text-xs text-charcoal-muted max-w-sm mx-auto leading-relaxed">
+            Join the HoneyChain Supply-Chain Integrity & Traceability Network
+          </p>
         </div>
 
-        <div className="glass-card p-6 sm:p-8 rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-subtle border border-border-warm space-y-5">
           {error && (
-            <Alert type="error" className="mb-5" onClose={() => setError(null)}>
+            <Alert type="error" onClose={() => setError(null)}>
               {error}
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-charcoal mb-1">
                 Full Name / Organization
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <User className="w-4 h-4 text-charcoal-muted absolute left-3 top-2.5" />
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Ramesh Beekeeping Farm"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Sahyadri Apiaries"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="w-full pl-9 pr-3 py-2 bg-surface-subtle border border-border-warm rounded-lg text-charcoal text-xs placeholder:text-charcoal-muted/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20 focus:border-forest-600"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-charcoal mb-1">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Mail className="w-4 h-4 text-charcoal-muted absolute left-3 top-2.5" />
                 <input
                   type="email"
                   required
+                  placeholder="ramesh@honeyapiary.org"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="contact@sahyadriapiary.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="w-full pl-9 pr-3 py-2 bg-surface-subtle border border-border-warm rounded-lg text-charcoal text-xs placeholder:text-charcoal-muted/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20 focus:border-forest-600"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Password (min 8 characters)
+              <label className="block text-xs font-semibold text-charcoal mb-1">
+                Password (min. 8 characters)
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-charcoal-muted absolute left-3 top-2.5" />
                 <input
                   type="password"
                   required
-                  minLength={8}
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="w-full pl-9 pr-3 py-2 bg-surface-subtle border border-border-warm rounded-lg text-charcoal text-xs placeholder:text-charcoal-muted/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20 focus:border-forest-600"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Select Your Role in the Chain
+              <label className="block text-xs font-semibold text-charcoal mb-2">
+                Supply Chain Role
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+              <div className="space-y-2">
                 {roles.map((r) => (
                   <label
                     key={r.value}
-                    className={`p-3 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between ${
+                    className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
                       role === r.value
-                        ? 'bg-amber-500/10 border-amber-500/50 text-white'
-                        : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                        ? 'bg-forest-50 border-forest-600 text-forest-900'
+                        : 'bg-surface-subtle border-border-warm text-charcoal hover:bg-surface-tint'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-xs text-white">{r.label}</span>
-                      <input
-                        type="radio"
-                        name="role"
-                        value={r.value}
-                        checked={role === r.value}
-                        onChange={() => setRole(r.value)}
-                        className="accent-amber-500"
-                      />
+                    <input
+                      type="radio"
+                      name="role"
+                      value={r.value}
+                      checked={role === r.value}
+                      onChange={() => setRole(r.value)}
+                      className="mt-0.5 text-forest-700 focus:ring-forest-600"
+                    />
+                    <div className="space-y-0.5">
+                      <p className="text-xs font-bold font-display">{r.label}</p>
+                      <p className="text-[11px] text-charcoal-muted leading-tight">{r.desc}</p>
                     </div>
-                    <span className="text-[11px] text-slate-400 leading-tight">{r.desc}</span>
                   </label>
                 ))}
               </div>
             </div>
 
-            <Button type="submit" size="lg" className="w-full mt-3" isLoading={loading}>
-              Create Account & Sign In <ArrowRight className="w-4 h-4 ml-1" />
+            <Button
+              type="submit"
+              variant="primary"
+              size="md"
+              className="w-full mt-2"
+              isLoading={loading}
+              icon={<ArrowRight className="w-4 h-4" />}
+            >
+              Create Operator Account
             </Button>
           </form>
+        </div>
 
-          <div className="mt-5 text-center text-xs text-slate-400">
-            Already registered?{' '}
-            <Link to="/login" className="text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-2">
-              Sign in here
-            </Link>
-          </div>
+        <div className="text-center text-xs text-charcoal-muted">
+          Already registered?{' '}
+          <Link to="/login" className="font-semibold text-forest-700 hover:underline">
+            Sign in to existing account
+          </Link>
         </div>
       </div>
     </div>

@@ -16,24 +16,24 @@ export const Badge: React.FC<BadgeProps> = ({
   icon,
 }) => {
   const variantStyles = {
-    amber: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-    emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    rose: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
-    blue: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
-    purple: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-    slate: 'bg-slate-800 text-slate-300 border-slate-700',
-    default: 'bg-slate-800/80 text-slate-300 border-slate-700/80',
+    emerald: 'bg-forest-50 text-forest-700 border-forest-200',
+    amber: 'bg-honey-100 text-honey-800 border-honey-200',
+    rose: 'bg-terracotta-50 text-terracotta-700 border-terracotta-200',
+    blue: 'bg-sky-50 text-sky-800 border-sky-200',
+    purple: 'bg-purple-50 text-purple-800 border-purple-200',
+    slate: 'bg-surface-tint text-charcoal-muted border-border-warm',
+    default: 'bg-surface-tint text-charcoal border-border-warm',
   };
 
   const sizeStyles = {
-    sm: 'text-[11px] px-2 py-0.5 font-medium',
-    md: 'text-xs px-2.5 py-1 font-semibold',
-    lg: 'text-sm px-3 py-1.5 font-semibold',
+    sm: 'text-[11px] px-2 py-0.5 font-medium rounded',
+    md: 'text-xs px-2.5 py-1 font-semibold rounded-md',
+    lg: 'text-xs px-3 py-1.5 font-semibold rounded-md',
   };
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border tracking-wide uppercase ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center gap-1.5 border font-mono tracking-normal ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
     >
       {icon && <span className="shrink-0">{icon}</span>}
       {children}
@@ -59,10 +59,10 @@ export const StatusBadge: React.FC<{ status: string; size?: 'sm' | 'md' | 'lg' }
   return (
     <Badge variant={variant} size={size}>
       <span className={`w-1.5 h-1.5 rounded-full ${
-        variant === 'emerald' ? 'bg-emerald-400' :
-        variant === 'rose' ? 'bg-rose-400' :
-        variant === 'amber' ? 'bg-amber-400 animate-pulse' :
-        variant === 'blue' ? 'bg-sky-400' : 'bg-slate-400'
+        variant === 'emerald' ? 'bg-forest-600' :
+        variant === 'rose' ? 'bg-terracotta-600' :
+        variant === 'amber' ? 'bg-honey-600' :
+        variant === 'blue' ? 'bg-sky-600' : 'bg-charcoal-light'
       }`} />
       {status}
     </Badge>

@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { api } from '../api/client';
 import { AnomalyCheckResponse } from '../types';
-import { Card, CardHeader, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Badge, StatusBadge } from '../components/ui/Badge';
+import { Badge } from '../components/ui/Badge';
 import { Alert } from '../components/ui/Alert';
 import {
-  AlertOctagon,
+  AlertTriangle,
   Scale,
   ShieldCheck,
-  ArrowRight,
-  Info,
   CheckCircle2,
-  AlertTriangle,
   XCircle,
-  TrendingDown,
+  HelpCircle,
+  ArrowRight,
 } from 'lucide-react';
 
 export const Anomalies: React.FC = () => {
@@ -31,7 +28,7 @@ export const Anomalies: React.FC = () => {
   const scenarios = [
     {
       name: 'Scenario 1: Normal Flow (Pass)',
-      desc: 'Typical gentle shrinkage during micro-filtration and moisture reduction',
+      desc: 'Typical gentle shrinkage during micro-filtration and moisture reduction (50 -> 48 -> 47 -> 45 kg)',
       harvest: 50.0,
       processing: 48.0,
       bottled: 47.0,
@@ -39,7 +36,7 @@ export const Anomalies: React.FC = () => {
     },
     {
       name: 'Scenario 2: Processing Mass Inversion (Violation)',
-      desc: '65 kg emerged from 50 kg raw honey (unauthorized high-fructose syrup addition)',
+      desc: '65 kg emerged from 50 kg raw honey (unauthorized high-fructose corn syrup addition)',
       harvest: 50.0,
       processing: 65.0,
       bottled: 64.0,
@@ -47,7 +44,7 @@ export const Anomalies: React.FC = () => {
     },
     {
       name: 'Scenario 3: Bottling Volume Inflation (Violation)',
-      desc: 'Bottled volume exceeds processing tank output',
+      desc: 'Bottled volume exceeds processing tank output (48 -> 54 kg)',
       harvest: 50.0,
       processing: 48.0,
       bottled: 54.0,
@@ -55,7 +52,7 @@ export const Anomalies: React.FC = () => {
     },
     {
       name: 'Scenario 4: Dispatch Inflation (Violation)',
-      desc: 'Dispatched volume exceeds bottled stock',
+      desc: 'Dispatched volume exceeds bottled warehouse inventory (47 -> 58 kg)',
       harvest: 50.0,
       processing: 48.0,
       bottled: 47.0,
@@ -91,14 +88,15 @@ export const Anomalies: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <AlertOctagon className="w-8 h-8 text-rose-500" /> 2-Layer Supply-Chain Anomaly Inspector
+        <h1 className="text-2xl sm:text-3xl font-bold text-charcoal font-display tracking-tight flex items-center gap-2.5">
+          <Scale className="w-7 h-7 text-forest-700" />
+          <span>Supply-Chain Anomaly & Reconciliation</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
-          Authoritative mass-conservation rule enforcement (Layer 1) integrated with statistical ML anomaly detection (Layer 2)
+        <p className="text-xs sm:text-sm text-charcoal-muted mt-1">
+          Dual-layer audit engine: deterministic physical mass conservation rules strictly override machine learning inference
         </p>
       </div>
 
@@ -108,188 +106,203 @@ export const Anomalies: React.FC = () => {
         </Alert>
       )}
 
-      {/* SIH Preset Scenarios */}
-      <div className="space-y-2">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-          Preset SIH Demonstration Scenarios:
-        </span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {scenarios.map((sc, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => applyScenario(sc)}
-              className="p-3 rounded-2xl bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-amber-500/40 text-left transition space-y-1 group"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-xs text-white group-hover:text-amber-400">{sc.name}</span>
-                <span className="text-[10px] text-slate-500 font-mono">Load</span>
-              </div>
-              <p className="text-[11px] text-slate-400 leading-tight">{sc.desc}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Form Inputs */}
-        <Card className="lg:col-span-2">
-          <CardHeader
-            title="Batch Stage Quantities (kg)"
-            subtitle="Quantity flow through the four physical transformation stages"
-          />
-          <CardContent>
-            <form onSubmit={handleCheckAnomaly} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Batch ID</label>
-                <input
-                  type="text"
-                  required
-                  value={batchId}
-                  onChange={(e) => setBatchId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm font-mono"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    1. Harvest Quantity (kg)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    required
-                    value={harvestKg}
-                    onChange={(e) => setHarvestKg(parseFloat(e.target.value) || 0)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    2. Processing Quantity (kg)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    required
-                    value={processingKg}
-                    onChange={(e) => setProcessingKg(parseFloat(e.target.value) || 0)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    3. Bottled Quantity (kg)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    required
-                    value={bottledKg}
-                    onChange={(e) => setBottledKg(parseFloat(e.target.value) || 0)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    4. Dispatched Quantity (kg)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    required
-                    value={dispatchedKg}
-                    onChange={(e) => setDispatchedKg(parseFloat(e.target.value) || 0)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm font-mono"
-                  />
-                </div>
-              </div>
-
-              <Button type="submit" size="lg" className="w-full mt-4" isLoading={loading}>
-                Evaluate 2-Layer Anomaly Engine <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Results */}
-        <div className="space-y-6">
-          <Card className="border border-white/10">
-            <CardHeader title="Evaluation Results" subtitle="Dual-layer inspection verdict" />
-            <CardContent className="space-y-4">
-              {result ? (
-                <div className="space-y-4">
-                  <div className="text-center p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
-                    <span className="text-[11px] uppercase font-bold text-slate-400">Final Verdict</span>
-                    <div>
-                      <StatusBadge status={result.final_status} size="lg" />
-                    </div>
-                  </div>
-
-                  {/* Stage Rules */}
-                  <div className="space-y-2 text-xs">
-                    <span className="font-bold text-slate-300 uppercase text-[10px]">
-                      Layer 1: Deterministic Mass-Conservation Rules
-                    </span>
-                    <div className="space-y-1.5 font-mono">
-                      <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-850">
-                        <span>Processing &le; Harvest</span>
-                        <Badge variant={result.rule_check.processing_vs_harvest === 'PASS' ? 'emerald' : 'rose'}>
-                          {result.rule_check.processing_vs_harvest} ({result.gaps.processing_gap_kg > 0 ? `+${result.gaps.processing_gap_kg}` : result.gaps.processing_gap_kg} kg)
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-850">
-                        <span>Bottled &le; Processing</span>
-                        <Badge variant={result.rule_check.bottled_vs_processing === 'PASS' ? 'emerald' : 'rose'}>
-                          {result.rule_check.bottled_vs_processing} ({result.gaps.bottling_gap_kg > 0 ? `+${result.gaps.bottling_gap_kg}` : result.gaps.bottling_gap_kg} kg)
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-850">
-                        <span>Dispatched &le; Bottled</span>
-                        <Badge variant={result.rule_check.dispatched_vs_bottled === 'PASS' ? 'emerald' : 'rose'}>
-                          {result.rule_check.dispatched_vs_bottled} ({result.gaps.dispatch_gap_kg > 0 ? `+${result.gaps.dispatch_gap_kg}` : result.gaps.dispatch_gap_kg} kg)
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Layer 2 ML Model */}
-                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs flex items-center justify-between">
-                    <div>
-                      <span className="font-bold text-slate-200">Layer 2: ML Model Output</span>
-                      <p className="text-[10px] text-slate-400">Trained Anomaly Classifier</p>
-                    </div>
-                    <Badge variant={result.ml_prediction === 'NORMAL' ? 'emerald' : 'rose'}>
-                      {result.ml_prediction}
-                    </Badge>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-8 text-center text-slate-500 text-xs">
-                  Run evaluation or select an SIH preset above to inspect results.
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-slate-300 space-y-1.5">
-            <div className="flex items-center gap-1.5 font-bold text-amber-300">
-              <ShieldCheck className="w-4 h-4" /> Deterministic Authority Principle
-            </div>
-            <p className="text-slate-400 leading-relaxed text-[11px]">
-              If deterministic quantity conservation is violated (e.g. downstream output exceeds upstream input), the rule layer authoritatively overrides the ML prediction to guarantee fraud or data-entry errors are flagged.
-            </p>
+      {/* Scenarios & Form */}
+      <div className="bg-white border border-border-warm rounded-2xl p-6 shadow-subtle space-y-6">
+        {/* Scenarios */}
+        <div className="space-y-2 pb-4 border-b border-border-subtle">
+          <span className="text-[11px] font-mono font-semibold uppercase text-charcoal-muted block">
+            SIH Demonstration Test Scenarios
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {scenarios.map((sc, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => applyScenario(sc)}
+                className="p-3 rounded-xl bg-surface-subtle hover:bg-surface-tint border border-border-subtle text-left transition text-xs space-y-0.5"
+              >
+                <span className="font-bold text-charcoal block">{sc.name}</span>
+                <p className="text-[11px] text-charcoal-muted leading-tight">{sc.desc}</p>
+              </button>
+            ))}
           </div>
         </div>
+
+        {/* Input Form */}
+        <form onSubmit={handleCheckAnomaly} className="space-y-4 text-xs">
+          <div>
+            <label className="block text-xs font-semibold text-charcoal mb-1">Batch Identifier</label>
+            <input
+              type="text"
+              required
+              value={batchId}
+              onChange={(e) => setBatchId(e.target.value)}
+              className="w-full px-3 py-2 bg-surface-subtle border border-border-warm rounded-lg font-mono text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-charcoal mb-1">Harvest (kg)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                required
+                value={harvestKg}
+                onChange={(e) => setHarvestKg(parseFloat(e.target.value))}
+                className="w-full px-3 py-2 bg-surface-subtle border border-border-warm rounded-lg font-mono text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-charcoal mb-1">Processing (kg)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                required
+                value={processingKg}
+                onChange={(e) => setProcessingKg(parseFloat(e.target.value))}
+                className="w-full px-3 py-2 bg-surface-subtle border border-border-warm rounded-lg font-mono text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-charcoal mb-1">Bottled (kg)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                required
+                value={bottledKg}
+                onChange={(e) => setBottledKg(parseFloat(e.target.value))}
+                className="w-full px-3 py-2 bg-surface-subtle border border-border-warm rounded-lg font-mono text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-charcoal mb-1">Dispatched (kg)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                required
+                value={dispatchedKg}
+                onChange={(e) => setDispatchedKg(parseFloat(e.target.value))}
+                className="w-full px-3 py-2 bg-surface-subtle border border-border-warm rounded-lg font-mono text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20"
+              />
+            </div>
+          </div>
+
+          <div className="pt-2 flex justify-end">
+            <Button
+              type="submit"
+              variant="primary"
+              size="md"
+              isLoading={loading}
+              icon={<Scale className="w-4 h-4" />}
+            >
+              Run Dual-Layer Anomaly Inspection
+            </Button>
+          </div>
+        </form>
       </div>
+
+      {/* Results Card */}
+      {result && (() => {
+        const isRuleViolation =
+          result.rule_check.processing_vs_harvest === 'FAIL' ||
+          result.rule_check.bottled_vs_processing === 'FAIL' ||
+          result.rule_check.dispatched_vs_bottled === 'FAIL';
+        const isMlAnomaly = result.ml_prediction === 'ANOMALY';
+        const isAnomaly = result.final_status === 'ANOMALY';
+        const summaryText = isRuleViolation
+          ? `Physical mass violation detected across supply chain custody stages (Processing gap: ${result.gaps.processing_gap_kg.toFixed(1)} kg, Bottling gap: ${result.gaps.bottling_gap_kg.toFixed(1)} kg, Dispatch gap: ${result.gaps.dispatch_gap_kg.toFixed(1)} kg).`
+          : isMlAnomaly
+          ? `Supportive statistical model identified unusual operational pattern. Deterministic mass balance conserved.`
+          : `All physical conservation rules passed. No operational discrepancies flagged across custody stages.`;
+
+        return (
+          <div className="bg-white border border-border-warm rounded-2xl p-6 shadow-subtle space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold font-display text-charcoal">Inspection Verdict</span>
+                <span className="font-mono text-xs font-bold text-charcoal">Batch: {result.batch_id}</span>
+              </div>
+              <span
+                className={`text-xs font-mono font-bold px-2.5 py-1 rounded border ${
+                  isAnomaly
+                    ? 'bg-terracotta-50 text-terracotta-700 border-terracotta-200'
+                    : 'bg-forest-50 text-forest-700 border-forest-200'
+                }`}
+              >
+                {isAnomaly ? 'ANOMALY DETECTED' : 'NORMAL (CONSERVED)'}
+              </span>
+            </div>
+
+            {/* Dual Layer Breakdown */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              {/* Layer 1: Deterministic Physical Rule */}
+              <div className="p-4 rounded-xl bg-surface-subtle border border-border-subtle space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-charcoal text-xs">
+                    Layer 1: Deterministic Rule
+                  </span>
+                  <span className="text-[10px] font-mono text-forest-700 font-bold">AUTHORITATIVE</span>
+                </div>
+                <p className="text-xs text-charcoal-muted">
+                  Checks absolute mass conservation across custody handoffs (e.g. Processing &le; Harvest).
+                </p>
+                <div className="flex items-center gap-1.5 pt-1">
+                  {isRuleViolation ? (
+                    <span className="text-terracotta-700 font-bold font-mono flex items-center gap-1">
+                      <XCircle className="w-4 h-4" /> VIOLATION: Discrepancy Flagged
+                    </span>
+                  ) : (
+                    <span className="text-forest-700 font-bold font-mono flex items-center gap-1">
+                      <CheckCircle2 className="w-4 h-4" /> PASS: Mass Conserved
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Layer 2: Machine Learning Model */}
+              <div className="p-4 rounded-xl bg-surface-subtle border border-border-subtle space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-charcoal text-xs">
+                    Layer 2: ML SVM Detection
+                  </span>
+                  <span className="text-[10px] font-mono text-charcoal-muted">SUPPORTING</span>
+                </div>
+                <p className="text-xs text-charcoal-muted">
+                  Evaluates non-linear deviation patterns based on historical apiculture loss rates.
+                </p>
+                <div className="flex items-center gap-1.5 pt-1">
+                  {isMlAnomaly ? (
+                    <span className="text-honey-800 font-bold font-mono flex items-center gap-1">
+                      <AlertTriangle className="w-4 h-4" /> Outlier Pattern Flagged
+                    </span>
+                  ) : (
+                    <span className="text-forest-700 font-bold font-mono flex items-center gap-1">
+                      <CheckCircle2 className="w-4 h-4" /> Pattern within Expected Variance
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Detailed Explanation */}
+            <div
+              className={`p-4 rounded-xl border text-xs space-y-1 ${
+                isAnomaly
+                  ? 'bg-terracotta-50 border-terracotta-200 text-terracotta-900'
+                  : 'bg-forest-50 border-forest-200 text-forest-900'
+              }`}
+            >
+              <span className="font-mono uppercase font-bold text-[10px] block">Investigation Summary</span>
+              <p className="text-xs leading-relaxed">{summaryText}</p>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

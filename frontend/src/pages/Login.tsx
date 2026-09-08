@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Alert } from '../components/ui/Alert';
-import { Hexagon, Lock, Mail, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -34,123 +34,123 @@ export const Login: React.FC = () => {
   };
 
   const demoAccounts = [
-    { role: 'BEEKEEPER', email: 'beekeeper@honeychain.com', desc: 'Harvest & Batch Origination' },
-    { role: 'COLLECTOR', email: 'collector@honeychain.com', desc: 'Collection Events' },
-    { role: 'PROCESSOR', email: 'processor@honeychain.com', desc: 'Filtration & Packaging' },
-    { role: 'LAB', email: 'lab@honeychain.com', desc: 'Purity & Lab Testing' },
-    { role: 'ADMIN', email: 'admin@honeychain.com', desc: 'Analytics & Monitoring' },
+    { role: 'BEEKEEPER', email: 'beekeeper@honeychain.com', desc: 'Harvest & batch extraction' },
+    { role: 'COLLECTOR', email: 'collector@honeychain.com', desc: 'Aggregation & transit handoffs' },
+    { role: 'PROCESSOR', email: 'processor@honeychain.com', desc: 'Filtration, mass balance & packaging' },
+    { role: 'LAB', email: 'lab@honeychain.com', desc: 'Purity & chemical assay verification' },
+    { role: 'ADMIN', email: 'admin@honeychain.com', desc: 'Analytics, user directory & system health' },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 sm:p-6 selection:bg-amber-500/30">
+    <div className="min-h-screen bg-canvas flex items-center justify-center p-4 sm:p-6 selection:bg-amber-200 selection:text-amber-900">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl shadow-amber-500/20 text-slate-950 mb-2 relative">
-            <Hexagon className="w-8 h-8 fill-amber-950/20 stroke-[2]" />
-            <span className="absolute font-black text-lg text-slate-950">H</span>
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-forest-700 text-white font-bold font-mono text-base shadow-subtle mb-1">
+            HC
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Welcome to HoneyChain</h1>
-          <p className="text-sm text-slate-400">SIH 2026 Honey Supply-Chain Traceability & Integrity Platform</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-charcoal font-display tracking-tight">
+            Sign In to HoneyChain
+          </h1>
+          <p className="text-xs text-charcoal-muted max-w-sm mx-auto leading-relaxed">
+            SIH 2026 Honey Supply-Chain Traceability & Authenticity Platform
+          </p>
         </div>
 
         {/* Form Card */}
-        <div className="glass-card p-6 sm:p-8 rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
+        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-subtle border border-border-warm space-y-5">
           {error && (
-            <Alert type="error" className="mb-5" onClose={() => setError(null)}>
+            <Alert type="error" onClose={() => setError(null)}>
               {error}
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-charcoal mb-1">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Mail className="w-4 h-4 text-charcoal-muted absolute left-3 top-2.5" />
                 <input
                   type="email"
                   required
+                  placeholder="name@organization.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@honeychain.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="w-full pl-9 pr-3 py-2 bg-surface-subtle border border-border-warm rounded-lg text-charcoal text-xs placeholder:text-charcoal-muted/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20 focus:border-forest-600"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-semibold text-charcoal">Password</label>
+              </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-charcoal-muted absolute left-3 top-2.5" />
                 <input
                   type="password"
                   required
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="w-full pl-9 pr-3 py-2 bg-surface-subtle border border-border-warm rounded-lg text-charcoal text-xs placeholder:text-charcoal-muted/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-600/20 focus:border-forest-600"
                 />
               </div>
             </div>
 
-            <Button type="submit" size="lg" className="w-full mt-2" isLoading={loading}>
-              Sign In to HoneyChain <ArrowRight className="w-4 h-4 ml-1" />
+            <Button
+              type="submit"
+              variant="primary"
+              size="md"
+              className="w-full mt-2"
+              isLoading={loading}
+              icon={<ArrowRight className="w-4 h-4" />}
+            >
+              Sign In to HoneyChain
             </Button>
           </form>
 
-          {/* Quick SIH Demo Logins */}
-          <div className="mt-6 pt-5 border-t border-slate-800">
-            <div className="flex items-center justify-between mb-2.5">
-              <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                <UserCheck className="w-3.5 h-3.5" /> SIH Demo Accounts
-              </span>
-              <span className="text-[10px] text-slate-500">Click to autofill</span>
-            </div>
+          {/* Quick Demo Accounts for SIH Jury Evaluation */}
+          <div className="pt-5 border-t border-border-subtle space-y-2">
+            <span className="text-[11px] font-mono uppercase font-bold text-charcoal-muted block">
+              SIH 2026 Demo Access Roles:
+            </span>
             <div className="grid grid-cols-1 gap-1.5">
               {demoAccounts.map((acc) => (
                 <button
                   key={acc.role}
                   type="button"
                   onClick={() => setDemoUser(acc.email)}
-                  className="w-full text-left px-3 py-1.5 rounded-lg bg-slate-850 hover:bg-slate-800 border border-slate-750 hover:border-amber-500/40 transition flex items-center justify-between group"
+                  className="p-2.5 rounded-lg bg-surface-subtle hover:bg-surface-tint border border-border-subtle text-left flex items-center justify-between transition group min-h-[44px]"
                 >
-                  <div className="truncate">
-                    <span className="text-[11px] font-mono font-bold text-amber-400 group-hover:text-amber-300 mr-2">
+                  <div>
+                    <span className="font-mono font-bold text-xs text-charcoal group-hover:text-forest-700 transition">
                       [{acc.role}]
                     </span>
-                    <span className="text-[11px] text-slate-400">{acc.desc}</span>
+                    <p className="text-[11px] text-charcoal-muted">{acc.desc}</p>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono">fill</span>
+                  <span className="text-[10px] font-mono text-forest-700 bg-forest-50 border border-forest-200 px-1.5 py-0.5 rounded shrink-0">
+                    Auto-fill
+                  </span>
                 </button>
               ))}
             </div>
           </div>
-
-          <div className="mt-5 text-center text-xs text-slate-400">
-            Need a new beekeeper or supply partner account?{' '}
-            <Link to="/register" className="text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-2">
-              Register here
-            </Link>
-          </div>
         </div>
 
-        {/* Public Verification Link */}
-        <div className="text-center">
-          <a
-            href="/verify/lGEh2msu6hnOs5lyufEZVR0NqEBF4gWbopTEMTzenpo"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-full transition"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>Are you a consumer scanning a jar? Open Public Verification</span>
-          </a>
+        {/* Footer Nav */}
+        <div className="text-center text-xs text-charcoal-muted space-y-2">
+          <p>
+            Don't have an operator account?{' '}
+            <Link to="/register" className="font-semibold text-forest-700 hover:underline">
+              Register New Organization
+            </Link>
+          </p>
+          <p className="text-[11px] text-charcoal-muted/80">
+            HoneyChain SIH 2026 — Secure RBAC Enabled
+          </p>
         </div>
       </div>
     </div>

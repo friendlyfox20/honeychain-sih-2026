@@ -10,14 +10,15 @@ import {
   Layers,
   Sparkles,
   AlertTriangle,
-  ShieldCheck,
   Plus,
   ArrowRight,
-  ChevronRight,
-  TrendingUp,
-  FileCheck,
-  Scale,
   RefreshCw,
+  Compass,
+  Mic,
+  Calendar,
+  CheckCircle2,
+  Scale,
+  MapPin,
 } from 'lucide-react';
 
 export const Dashboard: React.FC = () => {
@@ -44,263 +45,266 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      {/* Welcome Banner */}
-      <div className="relative rounded-3xl p-6 sm:p-8 overflow-hidden border border-amber-500/20 bg-gradient-to-r from-amber-500/10 via-slate-900/80 to-slate-900/60 shadow-xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xs uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2.5 py-0.5 rounded-full">
-                {user?.role} Portal
+    <div className="space-y-8 max-w-5xl mx-auto">
+      {/* Editorial Field Workspace Greeting Banner */}
+      <div className="bg-surface-tint border border-border-warm rounded-2xl p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-forest-700 bg-forest-100/70 border border-forest-200 px-2 py-0.5 rounded">
+                {user?.role} Workspace
               </span>
-              <span className="text-slate-400 text-xs">• HoneyChain SIH 2026</span>
+              <span className="text-xs text-charcoal-muted font-mono">• Apiary Region: Maharashtra / Karnataka</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Welcome back, {user?.name}
+            <h1 className="text-2xl sm:text-3xl font-bold text-charcoal font-display tracking-tight">
+              Good day, {user?.name}
             </h1>
-            <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Real-time monitoring of traceable honey batches, reconciliation integrity checks, and blockchain anchoring proofs.
+            <p className="text-sm text-charcoal-muted max-w-xl leading-relaxed">
+              {isBeekeeper()
+                ? 'Your registered apiaries and colonies are active. Record new honey extractions or evaluate seasonal yield estimates below.'
+                : 'Operational overview of traceable honey lots, deterministic mass balances, and laboratory verification records.'}
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 shrink-0">
             <Button
               variant="secondary"
-              size="md"
-              icon={<RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />}
+              size="sm"
+              icon={<RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />}
               onClick={fetchDashboardData}
             >
-              Refresh
+              Update
             </Button>
             {(isBeekeeper() || isProcessor() || isCollector() || isAdmin()) && (
               <Link to="/batches">
-                <Button size="md" icon={<Plus className="w-4 h-4" />}>
-                  Create Batch
+                <Button variant="primary" size="sm" icon={<Plus className="w-4 h-4" />}>
+                  New Batch
                 </Button>
               </Link>
             )}
           </div>
         </div>
+
+        {/* Primary Field Action Strip (Tailored for Rural & Operational Touch Use >= 44px) */}
+        <div className="mt-6 pt-6 border-t border-border-warm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {isBeekeeper() ? (
+            <>
+              <Link
+                to="/batches"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 hover:shadow-subtle transition group min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-forest-50 text-forest-700 border border-forest-200 flex items-center justify-center shrink-0">
+                  <Plus className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-charcoal group-hover:text-forest-700 transition">Record Harvest</p>
+                  <p className="text-[11px] text-charcoal-muted truncate">Log raw hive extraction</p>
+                </div>
+              </Link>
+
+              <Link
+                to="/batches"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 hover:shadow-subtle transition group min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-surface-tint text-charcoal border border-border-warm flex items-center justify-center shrink-0">
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-charcoal group-hover:text-forest-700 transition">My Hives & Batches</p>
+                  <p className="text-[11px] text-charcoal-muted truncate">{totalCount} total registered</p>
+                </div>
+              </Link>
+
+              <Link
+                to="/predictions"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 hover:shadow-subtle transition group min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-honey-100 text-honey-800 border border-honey-200 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-charcoal group-hover:text-forest-700 transition">Yield Estimate</p>
+                  <p className="text-[11px] text-charcoal-muted truncate">Forecast extraction kg</p>
+                </div>
+              </Link>
+
+              <Link
+                to="/voice"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 hover:shadow-subtle transition group min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-forest-50 text-forest-700 border border-forest-200 flex items-center justify-center shrink-0">
+                  <Mic className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-charcoal group-hover:text-forest-700 transition">Ask HoneyChain</p>
+                  <p className="text-[11px] text-charcoal-muted truncate">Speak query in Hindi/Eng</p>
+                </div>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/batches"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 transition min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-forest-50 text-forest-700 border border-forest-200 flex items-center justify-center shrink-0">
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-charcoal">Traceable Batches</p>
+                  <p className="text-[11px] text-charcoal-muted">{totalCount} active inventory</p>
+                </div>
+              </Link>
+
+              <Link
+                to="/anomalies"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 transition min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-honey-100 text-honey-800 border border-honey-200 flex items-center justify-center shrink-0">
+                  <Scale className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-charcoal">Mass Balance</p>
+                  <p className="text-[11px] text-charcoal-muted">Output &le; Input check</p>
+                </div>
+              </Link>
+
+              <Link
+                to="/anomalies"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 transition min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-terracotta-50 text-terracotta-700 border border-terracotta-200 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-charcoal">Anomaly Signals</p>
+                  <p className="text-[11px] text-charcoal-muted">Deterministic override</p>
+                </div>
+              </Link>
+
+              <Link
+                to="/predictions"
+                className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border-warm hover:border-forest-600 transition min-h-[52px]"
+              >
+                <div className="w-9 h-9 rounded-lg bg-surface-tint text-charcoal border border-border-warm flex items-center justify-center shrink-0">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-charcoal">Honey Intelligence</p>
+                  <p className="text-[11px] text-charcoal-muted">ML decision support</p>
+                </div>
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <Card className="hover:border-slate-700/80 transition">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Batches</p>
-              <h3 className="text-2xl sm:text-3xl font-black text-white">{totalCount}</h3>
-              <p className="text-[11px] text-emerald-400 flex items-center gap-1 font-medium">
-                <TrendingUp className="w-3 h-3" /> Authoritative DB Records
-              </p>
-            </div>
-            <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-              <Layers className="w-6 h-6" />
-            </div>
-          </CardContent>
-        </Card>
+      {/* The Physical Honey Provenance Journey — Clear Grounded Visual Sequence */}
+      <div className="bg-white border border-border-warm rounded-2xl p-6">
+        <div className="flex items-center justify-between pb-4 border-b border-border-subtle mb-5">
+          <div>
+            <h2 className="text-base font-bold text-charcoal font-display">The Honey Traceability Journey</h2>
+            <p className="text-xs text-charcoal-muted">
+              Physical custody handoffs and deterministic verification checkpoints
+            </p>
+          </div>
+          <span className="text-[11px] font-mono text-forest-700 bg-forest-50 px-2 py-0.5 rounded border border-forest-200">
+            Chain of Custody
+          </span>
+        </div>
 
-        <Card className="hover:border-slate-700/80 transition">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Mass Conservation</p>
-              <h3 className="text-2xl sm:text-3xl font-black text-white">Authoritative</h3>
-              <p className="text-[11px] text-slate-400 font-medium">Output &le; Input Enforcement</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-center text-xs">
+          {[
+            { step: '01', title: 'Hive Origin', desc: 'Apiary registration & geolocation' },
+            { step: '02', title: 'Harvest', desc: 'Raw extraction & initial weight' },
+            { step: '03', title: 'Collection', desc: 'Regional aggregation & custody' },
+            { step: '04', title: 'Processing', desc: 'Filtration & moisture check' },
+            { step: '05', title: 'Laboratory', desc: 'HMF, moisture & C4 assay' },
+            { step: '06', title: 'Packaging', desc: 'Lot serialization & QR seal' },
+            { step: '07', title: 'Consumer', desc: 'Public tamper-proof verify' },
+          ].map((item, idx) => (
+            <div
+              key={item.step}
+              className="p-3 rounded-xl bg-surface-subtle border border-border-subtle flex flex-col items-center justify-between space-y-1.5"
+            >
+              <span className="text-[10px] font-mono font-bold text-charcoal-muted bg-white border border-border-warm px-1.5 py-0.5 rounded">
+                {item.step}
+              </span>
+              <p className="font-semibold text-charcoal text-xs">{item.title}</p>
+              <p className="text-[10px] text-charcoal-muted leading-tight">{item.desc}</p>
             </div>
-            <div className="p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
-              <Scale className="w-6 h-6" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:border-slate-700/80 transition">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Anomaly Engine</p>
-              <h3 className="text-2xl sm:text-3xl font-black text-emerald-400">2-Layer</h3>
-              <p className="text-[11px] text-slate-400 font-medium">Rules + ML Classification</p>
-            </div>
-            <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:border-slate-700/80 transition">
-          <CardContent className="p-5 flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Blockchain Layer</p>
-              <h3 className="text-2xl sm:text-3xl font-black text-white">SHA-256</h3>
-              <p className="text-[11px] text-amber-400 font-medium">Cryptographic Proof Anchors</p>
-            </div>
-            <div className="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
-              <Sparkles className="w-6 h-6" />
-            </div>
-          </CardContent>
-        </Card>
+          ))}
+        </div>
       </div>
 
-      {/* Role-Specific Shortcuts & Physical Flow */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Physical Flow Visual Guide */}
-        <Card className="lg:col-span-2">
-          <CardHeader
-            title="HoneyChain Provenance Journey"
-            subtitle="The physical honey supply-chain journey verified by authoritative event logs and lab testing"
-          />
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { step: '1. Apiary Hive', desc: 'Harvest & batch creation', role: 'BEEKEEPER', color: 'border-amber-500/40 text-amber-400' },
-                { step: '2. Transit Hub', desc: 'Secure collection & storage', role: 'COLLECTOR', color: 'border-sky-500/40 text-sky-400' },
-                { step: '3. Processing & Lab', desc: 'Filtration & purity assay', role: 'PROCESSOR / LAB', color: 'border-emerald-500/40 text-emerald-400' },
-                { step: '4. Consumer Bottle', desc: 'QR code verification & proof', role: 'CONSUMER', color: 'border-purple-500/40 text-purple-400' },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className={`p-3.5 rounded-2xl bg-slate-900/60 border ${item.color} flex flex-col justify-between`}
-                >
-                  <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-70">
-                      {item.role}
-                    </span>
-                    <h4 className="text-xs font-bold text-white mt-1">{item.step}</h4>
-                    <p className="text-[11px] text-slate-400 mt-0.5">{item.desc}</p>
+      {/* Recent Batches Ledger Table */}
+      <div className="bg-white border border-border-warm rounded-2xl overflow-hidden shadow-subtle">
+        <div className="p-5 border-b border-border-subtle flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-bold text-charcoal font-display">Recent Traceable Batches</h2>
+            <p className="text-xs text-charcoal-muted">Recorded extractions and custody lots in your workspace</p>
+          </div>
+          <Link
+            to="/batches"
+            className="text-xs font-semibold text-forest-700 hover:text-forest-800 flex items-center gap-1 transition"
+          >
+            <span>View All ({totalCount})</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="p-8 text-center text-xs text-charcoal-muted">
+            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-forest-700" />
+            Loading recent batches...
+          </div>
+        ) : batches.length === 0 ? (
+          <div className="p-10 text-center text-xs text-charcoal-muted">
+            <Layers className="w-8 h-8 mx-auto mb-2 text-charcoal-muted opacity-40" />
+            <p className="font-medium text-charcoal">No batches registered yet</p>
+            <p className="text-[11px] text-charcoal-muted mt-0.5">Click "New Batch" to record your first honey harvest.</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-border-subtle">
+            {batches.map((batch) => (
+              <Link
+                key={batch.batch_id}
+                to={`/batches/${batch.batch_id}`}
+                className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-surface-tint transition group"
+              >
+                <div className="flex items-start sm:items-center gap-3.5">
+                  <div className="w-9 h-9 rounded-lg bg-surface-tint text-charcoal flex items-center justify-center font-mono font-bold text-xs border border-border-warm shrink-0 group-hover:border-forest-600 transition">
+                    {batch.source_type[0]}
+                  </div>
+                  <div className="min-w-0 space-y-0.5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-mono font-bold text-xs sm:text-sm text-charcoal group-hover:text-forest-700 transition">
+                        {batch.batch_id}
+                      </span>
+                      <StatusBadge status={batch.status} size="sm" />
+                    </div>
+                    <p className="text-xs text-charcoal-muted flex items-center gap-3">
+                      <span>Source: {batch.source_type} ({batch.source_reference || 'Apiary'})</span>
+                      <span>•</span>
+                      <span>{new Date(batch.created_at).toLocaleDateString()}</span>
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            <div className="p-3.5 rounded-2xl bg-amber-500/5 border border-amber-500/20 flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-              <div className="text-xs text-slate-300 space-y-1">
-                <span className="font-bold text-amber-300">Core Principle: TRACEABILITY + EVIDENCE + INTEGRITY</span>
-                <p className="text-slate-400 leading-relaxed">
-                  HoneyChain does not replace laboratory testing or claim blockchain creates truth out of nothing. It records verifiable custody, enforces deterministic mass conservation, and anchors cryptographic hashes to guarantee data immutability.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Action Station */}
-        <Card>
-          <CardHeader title="Quick Actions" subtitle={`Available operations for ${user?.role}`} />
-          <CardContent className="space-y-2.5">
-            <Link
-              to="/batches"
-              className="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition group"
-            >
-              <div className="flex items-center gap-3">
-                <Layers className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-semibold text-slate-200">Inspect Honey Batches</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white" />
-            </Link>
-
-            <Link
-              to="/anomalies"
-              className="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition group"
-            >
-              <div className="flex items-center gap-3">
-                <Scale className="w-4 h-4 text-sky-400" />
-                <span className="text-xs font-semibold text-slate-200">2-Layer Anomaly Test</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white" />
-            </Link>
-
-            <Link
-              to="/predictions"
-              className="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition group"
-            >
-              <div className="flex items-center gap-3">
-                <Sparkles className="w-4 h-4 text-purple-400" />
-                <span className="text-xs font-semibold text-slate-200">ML Honey Yield & Production</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white" />
-            </Link>
-
-            <Link
-              to="/voice"
-              className="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition group"
-            >
-              <div className="flex items-center gap-3">
-                <FileCheck className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-semibold text-slate-200">Voice Query Assistant</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white" />
-            </Link>
-
-            {isAdmin() && (
-              <Link
-                to="/admin/analytics"
-                className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition group"
-              >
-                <div className="flex items-center gap-3">
-                  <ShieldCheck className="w-4 h-4 text-amber-400" />
-                  <span className="text-xs font-bold text-amber-300">Admin Command Center</span>
+                <div className="flex items-center justify-between sm:justify-end gap-5 pl-12 sm:pl-0">
+                  <div className="text-left sm:text-right">
+                    <span className="text-xs sm:text-sm font-bold font-mono text-charcoal tabular-nums">
+                      {batch.quantity_kg.toFixed(2)} kg
+                    </span>
+                    <p className="text-[11px] text-charcoal-muted font-medium">Recorded Volume</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-charcoal-muted group-hover:text-forest-700 group-hover:translate-x-0.5 transition" />
                 </div>
-                <ArrowRight className="w-4 h-4 text-amber-400" />
               </Link>
-            )}
-          </CardContent>
-        </Card>
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* Recent Batches Table */}
-      <Card>
-        <CardHeader
-          title="Recent Honey Batches"
-          subtitle="Latest recorded batches with live traceability links"
-          action={
-            <Link to="/batches" className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
-              View All <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          }
-        />
-        <CardContent className="p-0 overflow-x-auto">
-          {loading ? (
-            <div className="p-8 text-center text-slate-400 text-xs">Loading batches...</div>
-          ) : batches.length === 0 ? (
-            <div className="p-8 text-center text-slate-400 text-xs">No batches recorded yet.</div>
-          ) : (
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-slate-800 text-slate-400 bg-slate-900/40">
-                  <th className="py-3.5 px-6 font-semibold">Batch ID</th>
-                  <th className="py-3.5 px-6 font-semibold">Source Type</th>
-                  <th className="py-3.5 px-6 font-semibold">Source Ref</th>
-                  <th className="py-3.5 px-6 font-semibold">Quantity (kg)</th>
-                  <th className="py-3.5 px-6 font-semibold">Status</th>
-                  <th className="py-3.5 px-6 font-semibold text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60">
-                {batches.map((batch) => (
-                  <tr key={batch.id} className="hover:bg-slate-900/50 transition">
-                    <td className="py-3 px-6 font-mono font-bold text-amber-400">{batch.batch_id}</td>
-                    <td className="py-3 px-6 text-slate-300">{batch.source_type}</td>
-                    <td className="py-3 px-6 text-slate-400">{batch.source_reference || '—'}</td>
-                    <td className="py-3 px-6 font-mono text-white font-semibold">{batch.quantity_kg} kg</td>
-                    <td className="py-3 px-6">
-                      <StatusBadge status={batch.status} size="sm" />
-                    </td>
-                    <td className="py-3 px-6 text-right">
-                      <Link
-                        to={`/batches/${batch.batch_id}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 font-semibold text-[11px] transition"
-                      >
-                        Inspect Trace <ArrowRight className="w-3 h-3" />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 };
