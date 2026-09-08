@@ -1,4 +1,9 @@
+import os
 import pytest
+
+# Ensure tests use an isolated test SQLite database, preserving honeychain_dev.db
+os.environ["DATABASE_URL"] = "sqlite:///honeychain_test.db"
+
 from app.db.database import engine
 from app.models.base import Base
 

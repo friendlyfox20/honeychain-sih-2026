@@ -42,18 +42,28 @@ if [ -z "$UVICORN_BIN" ]; then
     exit 1
 fi
 
-# Check if port 8000 or 5173 are already bound
-if command -v lsof &> /dev/null; then
-    if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null ; then
-        echo "⚠️  Port 8000 is already in use. Terminating existing process..."
-        kill -9 $(lsof -ti:8000) 2>/dev/null || true
+# Free ports 8000 and 5173 if already bound by stale processes
+free_port() {
+    local PORT=$1
+    if command -v fuser &> /dev/null; then
+        fuser -k "${PORT}/tcp" 2>/dev/null || true
+    elif command -v lsof &> /dev/null; then
+        local PIDS
+        PIDS=$(lsof -ti:"${PORT}" 2>/dev/null || true)
+        if [ -n "$PIDS" ]; then
+            kill -9 $PIDS 2>/dev/null || true
+        fi
+    elif command -v ss &> /dev/null; then
+        local PIDS
+        PIDS=$(ss -lptn "sport = :${PORT}" 2>/dev/null | grep -oP 'pid=\K[0-9]+' || true)
+        if [ -n "$PIDS" ]; then
+            kill -9 $PIDS 2>/dev/null || true
+        fi
     fi
+}
 
-    if lsof -Pi :5173 -sTCP:LISTEN -t >/dev/null ; then
-        echo "⚠️  Port 5173 is already in use. Terminating existing process..."
-        kill -9 $(lsof -ti:5173) 2>/dev/null || true
-    fi
-fi
+free_port 8000
+free_port 5173
 
 # 1. Start Backend
 echo "🚀 [1/2] Launching FastAPI Backend on http://127.0.0.1:8000..."
